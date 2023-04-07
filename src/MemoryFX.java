@@ -26,6 +26,7 @@ public class MemoryFX extends Application{
         //und anzeigen
         meineStage.show();
     }
+    //--module-path ${PATH_TO_FX} --add-modules javafx.fxml,javafx.controls,javafx.graphics
 
     public static void main(String[] args) {
         //der Start
