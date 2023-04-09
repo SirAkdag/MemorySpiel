@@ -15,7 +15,7 @@ public class MemoryFX extends Application{
         FlowPane rootNode = new MemoryFeld().initGUI(new FlowPane());
         //die Szene erzeugen
         //an den Konstruktor werden der oberste Knoten und die Größe übergeben
-        Scene meineScene = new Scene(rootNode, 500, 560);
+        Scene meineScene = new Scene(rootNode, 495, 570);
 
         //den Titel über stage setzen
         meineStage.setTitle("Memory");
@@ -26,7 +26,6 @@ public class MemoryFX extends Application{
         //und anzeigen
         meineStage.show();
     }
-    //--module-path ${PATH_TO_FX} --add-modules javafx.fxml,javafx.controls,javafx.graphics
 
     public static void main(String[] args) {
         //der Start

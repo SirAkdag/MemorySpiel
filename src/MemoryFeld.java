@@ -2,6 +2,7 @@
 
 
 //für die Klassen Arrays und Collections
+
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -10,10 +11,13 @@ import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.util.Duration;
+
+import javax.swing.*;
 
 public class MemoryFeld {
     //eine innere Klasse für den Eventhandler des Timer
@@ -33,7 +37,7 @@ public class MemoryFeld {
             "grafiken/ente.jpg", "grafiken/fisch.jpg", "grafiken/fuchs.jpg", "grafiken/igel.jpg",
             "grafiken/kaenguruh.jpg", "grafiken/katze.jpg", "grafiken/kuh.jpg", "grafiken/maus1.jpg",
             "grafiken/maus2.jpg", "grafiken/maus3.jpg", "grafiken/melone.jpg", "grafiken/pilz.jpg",
-            "grafiken/ronny.jpg", "grafiken/schmetterling.jpg","grafiken/sonne.jpg",
+            "grafiken/ronny.jpg", "grafiken/schmetterling.jpg", "grafiken/sonne.jpg",
             "grafiken/wolke.jpg", "grafiken/maus4.jpg"};
 
     //für die Punkte
@@ -104,10 +108,11 @@ public class MemoryFeld {
         //in zwei Spalten anzeigen
         GridPane tempGrid = new GridPane();
         //und einfügen, dabei werden die Koordinaten angegeben
-        tempGrid.add(new Label("Mensch: "), 0 , 0 );
+        tempGrid.add(new Label("Mensch: "), 0, 0);
         tempGrid.add(menschPunkteLabel, 1, 0);
         tempGrid.add(new Label("Computer: "), 0, 1);
-        tempGrid.add(computerPunkteLabel, 1 ,1);
+        tempGrid.add(computerPunkteLabel, 1, 1);
+        tempGrid.add(new Label("Gewinner: "), 0, 2);
         feld.getChildren().add(tempGrid);
         return feld;
     }
@@ -140,7 +145,7 @@ public class MemoryFeld {
         int kartenID, kartenPos;
 
         //die Karten zwischenspeichern
-        paar[umgedrehteKarten]=karte;
+        paar[umgedrehteKarten] = karte;
 
         //die ID und die Position beschaffen
         kartenID = karte.getBildID();
@@ -171,9 +176,25 @@ public class MemoryFeld {
         }
         //haben wir zusammen 21 Paare, dann ist das Spiel vorbei
         if (computerPunkte + menschPunkte == 21) {
-            //wir beenden es hier direkt
-            Platform.exit();
+            if (menschPunkte > computerPunkte) {
+                menschGewinner();
+            } else {
+                pcGewinner();
+            }
+        Platform.exit();
         }
+    }
+
+    public void menschGewinner() {
+        Alert meinAlert = new Alert(Alert.AlertType.INFORMATION, "Der Menschen hat gewonnen");
+        meinAlert.setHeaderText("Gewinner");
+        meinAlert.showAndWait();
+    }
+
+    public void pcGewinner() {
+        Alert meinAlert = new Alert(Alert.AlertType.INFORMATION, "Der Computer hat gewonnen");
+        meinAlert.setHeaderText("Gewinner");
+        meinAlert.showAndWait();
     }
 
     //die Methode dreht die Karten wieder auf die Rückseite
@@ -206,8 +227,8 @@ public class MemoryFeld {
             //die Punkte setzen
             paarGefunden();
             //die Karten aus dem Gedächtnis löschen
-            gemerkteKarten[0][kartenID]=-2;
-            gemerkteKarten[1][kartenID]=-2;
+            gemerkteKarten[0][kartenID] = -2;
+            gemerkteKarten[1][kartenID] = -2;
         }
     }
 
@@ -217,8 +238,9 @@ public class MemoryFeld {
         if (spieler == 0) {
             menschPunkte++;
             menschPunkteLabel.setText(Integer.toString(menschPunkte));
-        }
-        else {
+
+
+        } else {
             computerPunkte++;
             computerPunkteLabel.setText(Integer.toString(computerPunkte));
         }
@@ -231,8 +253,7 @@ public class MemoryFeld {
         if (spieler == 0) {
             spieler = 1;
             computerZug();
-        }
-        else
+        } else
             spieler = 0;
     }
 
@@ -242,13 +263,13 @@ public class MemoryFeld {
         int zufall = 0;
         boolean treffer = false;
         //zur Steuerung über die Spielstärke
-        if ((int)(Math.random() * spielstaerke) == 0) {
+        if ((int) (Math.random() * spielstaerke) == 0) {
             //erst einmal nach einem Paar suchen
             //dazu durchsuchen wir das Array gemerkteKarten, bis wir in beiden Dimensionen
             //einen Wert finden
             while ((kartenZaehler < 21) && (treffer == false)) {
                 //gibt es in beiden Dimensionen einen Wert größer oder gleich 0?
-                if ((gemerkteKarten[0][kartenZaehler] >=0) &&  (gemerkteKarten[1][kartenZaehler] >=0)) {
+                if ((gemerkteKarten[0][kartenZaehler] >= 0) && (gemerkteKarten[1][kartenZaehler] >= 0)) {
                     //dann haben wir ein Paar
                     treffer = true;
                     //die Vorderseite der Karte zeigen
@@ -266,7 +287,7 @@ public class MemoryFeld {
         if (treffer == false) {
             //solange eine Zufallszahl suchen, bis eine Karte gefunden wird, die noch im Spiel ist
             do {
-                zufall = (int)(Math.random() * karten.length);
+                zufall = (int) (Math.random() * karten.length);
             } while (karten[zufall].isNochImSpiel() == false);
             //die erste Karte umdrehen
             //die Vorderseite der Karte zeigen
@@ -276,7 +297,7 @@ public class MemoryFeld {
 
             //für die zweite Karte müssen wir außerdem prüfen, ob sie nicht gerade angezeigt wird
             do {
-                zufall = (int)(Math.random() * karten.length);
+                zufall = (int) (Math.random() * karten.length);
             } while ((karten[zufall].isNochImSpiel() == false) || (karten[zufall].isUmgedreht() == true));
             //und die zweite Karte umdrehen
             karten[zufall].vorderseiteZeigen();
