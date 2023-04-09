@@ -3,6 +3,7 @@
 
 //für die Klassen Arrays und Collections
 
+import java.awt.*;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -43,7 +44,7 @@ public class MemoryFeld {
     //für die Punkte
     private int menschPunkte, computerPunkte;
     //zwei Labels für die Punkte
-    private Label menschPunkteLabel, computerPunkteLabel;
+    private Label menschPunkteLabel, computerPunkteLabel, werZieht;
 
     //wie viele Karten sind aktuell umgedreht?
     private int umgedrehteKarten;
@@ -102,6 +103,7 @@ public class MemoryFeld {
         kartenZeichnen(feld);
         menschPunkteLabel = new Label();
         computerPunkteLabel = new Label();
+        werZieht = new Label();
         menschPunkteLabel.setText(Integer.toString(menschPunkte));
         computerPunkteLabel.setText(Integer.toString(computerPunkte));
 
@@ -112,7 +114,9 @@ public class MemoryFeld {
         tempGrid.add(menschPunkteLabel, 1, 0);
         tempGrid.add(new Label("Computer: "), 0, 1);
         tempGrid.add(computerPunkteLabel, 1, 1);
-        tempGrid.add(new Label("Gewinner: "), 0, 2);
+        tempGrid.add(new Label("Es zieht: "), 0, 2);
+        tempGrid.add(werZieht, 1, 2);
+        werZieht.setText("der Mensch");
         feld.getChildren().add(tempGrid);
         return feld;
     }
@@ -181,7 +185,7 @@ public class MemoryFeld {
             } else {
                 pcGewinner();
             }
-        Platform.exit();
+            Platform.exit();
         }
     }
 
@@ -253,8 +257,12 @@ public class MemoryFeld {
         if (spieler == 0) {
             spieler = 1;
             computerZug();
-        } else
+            werZieht.setText("der Computer");
+        } else{
             spieler = 0;
+            werZieht.setText("der Mensch");
+        }
+
     }
 
     //die Methode setzt die Computerzüge um
