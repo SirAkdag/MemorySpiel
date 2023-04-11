@@ -17,6 +17,7 @@ public class MemoryFX extends Application{
         //an den Konstruktor werden der oberste Knoten und die Größe übergeben
         Scene meineScene = new Scene(rootNode, 495, 610);
 
+
         //den Titel über stage setzen
         meineStage.setTitle("Memory");
         //die Szene setzen
