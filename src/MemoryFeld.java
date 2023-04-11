@@ -4,6 +4,7 @@
 //für die Klassen Arrays und Collections
 
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -30,6 +31,16 @@ public class MemoryFeld {
         }
     }
 
+    class MeinSchummelListener implements ActionListener {
+        @Override
+        public void actionPerformed(java.awt.event.ActionEvent e) {
+            if (e.getActionCommand().equals("schummel")) {
+                if ((zugErlaubt() == true) || (umgedrehteKarten == 0))
+                    kartenAufdecken();
+            }
+        }
+    }
+
     //das Array für die Karten
     private MemoryKarte[] karten;
 
@@ -44,7 +55,7 @@ public class MemoryFeld {
     //für die Punkte
     private int menschPunkte, computerPunkte;
     //zwei Labels für die Punkte
-    private Label menschPunkteLabel, computerPunkteLabel, werZieht;
+    private JLabel menschPunkteLabel, computerPunkteLabel, werZieht;
 
     //wie viele Karten sind aktuell umgedreht?
     private int umgedrehteKarten;
@@ -64,6 +75,8 @@ public class MemoryFeld {
 
     //für den Timer
     private Timeline timer;
+
+    private JButton schummelButton;
 
     //der Konstruktor
     public MemoryFeld() {
@@ -99,25 +112,28 @@ public class MemoryFeld {
     //die Methode erstellt die Oberfläche und zeichnet die Karten über eine eigene Methode
     //übergeben wird ein FlowPane
     public FlowPane initGUI(FlowPane feld) {
+
         //für die Ausgaben
+        JPanel tempPanel = new JPanel();
         kartenZeichnen(feld);
-        menschPunkteLabel = new Label();
-        computerPunkteLabel = new Label();
-        werZieht = new Label();
+
+        menschPunkteLabel = new JLabel();
+        computerPunkteLabel = new JLabel();
+        schummelButton = new JButton("Schummel");
         menschPunkteLabel.setText(Integer.toString(menschPunkte));
         computerPunkteLabel.setText(Integer.toString(computerPunkte));
-
-        //in zwei Spalten anzeigen
-        GridPane tempGrid = new GridPane();
-        //und einfügen, dabei werden die Koordinaten angegeben
-        tempGrid.add(new Label("Mensch: "), 0, 0);
-        tempGrid.add(menschPunkteLabel, 1, 0);
-        tempGrid.add(new Label("Computer: "), 0, 1);
-        tempGrid.add(computerPunkteLabel, 1, 1);
-        tempGrid.add(new Label("Es zieht: "), 0, 2);
-        tempGrid.add(werZieht, 1, 2);
+        werZieht = new JLabel();
         werZieht.setText("der Mensch");
-        feld.getChildren().add(tempGrid);
+        schummelButton.setActionCommand("schummel");
+        MeinSchummelListener schummel = new MeinSchummelListener();
+        schummelButton.addActionListener(schummel);
+
+        tempPanel.add(menschPunkteLabel);
+        tempPanel.add(computerPunkteLabel);
+        tempPanel.add(werZieht);
+        tempPanel.add(schummelButton);
+        
+
         return feld;
     }
 
@@ -186,6 +202,16 @@ public class MemoryFeld {
                 pcGewinner();
             }
             Platform.exit();
+        }
+    }
+
+    public void kartenAufdecken() {
+
+        for (int i = 0; i <= 41; i++) {
+            if (karten[i].isNochImSpiel() == true) {
+
+                karten[i].vorderseiteZeigen();
+            }
         }
     }
 
@@ -258,7 +284,7 @@ public class MemoryFeld {
             spieler = 1;
             computerZug();
             werZieht.setText("der Computer");
-        } else{
+        } else {
             spieler = 0;
             werZieht.setText("der Mensch");
         }
